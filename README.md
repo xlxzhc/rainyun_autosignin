@@ -34,6 +34,21 @@
 
 > **注意**: `CAPTCHA_DATA` 必须是**单引号**包裹的合法 JSON 字符串，以便于在 GitHub Actions 工作流中正确解析。
 
+#### 可选项 (用于发送通知)
+
+脚本支持通过多种渠道发送通知，会按照以下顺序检查配置，并使用第一个配置成功的渠道：
+
+1.  **PushPlus (推送加)**
+    | Secret 名         | 描述                                                       |
+    | ----------------- | ---------------------------------------------------------- |
+    | `PUSH_PLUS_TOKEN` | [PushPlus](http://www.pushplus.plus/) 的 Token，用于推送签到结果。 |
+
+2.  **Telegram Bot**
+    | Secret 名      | 描述                                                       |
+    | -------------- | ---------------------------------------------------------- |
+    | `TG_BOT_TOKEN` | Telegram Bot 的 Token，格式如 `123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11`。 |
+    | `TG_USER_ID`   | 你的 Telegram User ID，可通过与 [@userinfobot](https://t.me/userinfobot) 对话获取。 |
+
 ### 3. 启用并运行 Action
 
 1.  进入你仓库的 **Actions** 标签页，如果有提示，请点击按钮启用 GitHub Actions。

@@ -30,11 +30,16 @@ jobs:
         # 决策理由：将所有需要的 secrets 作为环境变量传递给 Python 脚本。
         # 这种方法将配置与代码分离，提高了安全性和可维护性。
         env:
+          # 核心凭证
           yyqd: ${{ secrets.YYQD }}
-          VERIFY_TOKEN: ${{ secrets.VERIFY_TOKEN }}
+          
+          # 验证码服务配置
           CAPTCHA_URL: ${{ secrets.CAPTCHA_URL }}
           CAPTCHA_METHOD: ${{ secrets.CAPTCHA_METHOD }}
           CAPTCHA_DATA: ${{ secrets.CAPTCHA_DATA }}
-          # 如果你的通知服务需要配置，请取消下面的注释并设置相应的 secret
-          # NOTIFY_CONFIG: ${{ secrets.NOTIFY_CONFIG }}
+          
+          # 通知服务配置 (按需设置)
+          PUSH_PLUS_TOKEN: ${{ secrets.PUSH_PLUS_TOKEN }}
+          TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+          TG_USER_ID: ${{ secrets.TG_USER_ID }}
         run: python sign.py

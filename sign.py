@@ -18,11 +18,8 @@ from dataclasses import dataclass
 try:
     from notify import send
 except ImportError:
-    # 决策理由：移除对 notify.py 的硬依赖，使其成为可选组件。
-    # 如果 notify.py 不存在，则定义一个空函数，确保主程序可以继续运行，并通过 print 输出结果。
-    print("通知服务`notify.py`未找到，将仅输出到控制台。")
-    def send(title, content):
-        pass
+    print("通知服务加载失败，请检查notify.py是否存在")
+    exit(1)
 
 @dataclass
 class UserInfo:
