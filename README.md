@@ -1,6 +1,6 @@
 # 雨云自动签到 (GitHub Action 版)
 
-[![每日签到](https://github.com/${{ github.repository }}/actions/workflows/signin.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/signin.yml)
+[![每日签到](https://github.com/xlxzhc/rainyun_autosignin/actions/workflows/signin.yml/badge.svg)](https://github.com/xlxzhc/rainyun_autosignin/actions/workflows/signin.yml)
 
 本项目通过 GitHub Action 实现雨云每日自动签到。针对雨云更新后需要人机认证的问题，脚本已适配通用验证码服务。
 
