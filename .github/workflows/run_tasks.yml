@@ -1,0 +1,31 @@
+# 决策理由：此工作流用于手动执行雨云积分任务脚本。
+# 它被设计为仅手动触发 (workflow_dispatch)，因为积分任务通常不需要定时运行。
+# 它复用了签到工作流的基础配置，确保环境一致性。
+
+name: Rainyun Run Tasks
+
+on:
+  workflow_dispatch: # 仅允许手动触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run tasks script
+        # 决策理由：将 'yyqd' secret 作为环境变量传递给脚本，用于账户认证。
+        env:
+          yyqd: ${{ secrets.YYQD }}
+        run: python task_runner.py

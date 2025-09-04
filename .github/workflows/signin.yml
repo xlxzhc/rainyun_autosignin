@@ -1,0 +1,40 @@
+# 决策理由：此工作流用于自动化执行雨云签到脚本。
+# 它被设计为可以定时触发（每天 UTC 时间 22:00，即北京时间早上 6:00），也可以手动触发。
+# 使用 secrets 来管理敏感信息，并通过环境变量注入到脚本中，这是 GitHub Actions 的最佳实践。
+
+name: Rainyun Auto Signin
+
+on:
+  workflow_dispatch: # 允许手动触发
+  schedule:
+    - cron: '0 22 * * *' # 每天 UTC 22:00 执行 (CST 06:00)
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # 指定 Python 版本
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run signin script
+        # 决策理由：将所有需要的 secrets 作为环境变量传递给 Python 脚本。
+        # 这种方法将配置与代码分离，提高了安全性和可维护性。
+        env:
+          yyqd: ${{ secrets.YYQD }}
+          VERIFY_TOKEN: ${{ secrets.VERIFY_TOKEN }}
+          CAPTCHA_URL: ${{ secrets.CAPTCHA_URL }}
+          CAPTCHA_METHOD: ${{ secrets.CAPTCHA_METHOD }}
+          CAPTCHA_DATA: ${{ secrets.CAPTCHA_DATA }}
+          # 如果你的通知服务需要配置，请取消下面的注释并设置相应的 secret
+          # NOTIFY_CONFIG: ${{ secrets.NOTIFY_CONFIG }}
+        run: python sign.py

@@ -1,52 +1,42 @@
-# 雨云已经更新签到，现在需要人机认证，本项目跑路
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn?ref=badge_shield) [![每日签到（tg通知）](https://github.com/IcyBlue17/rainyun_autosignin/actions/workflows/signin-with-tg.yaml/badge.svg)](https://github.com/IcyBlue17/rainyun_autosignin/actions/workflows/signin-with-tg.yaml)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn.svg?type=shield&issueType=security)](https://app.fossa.com/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn?ref=badge_shield&issueType=security)
+# 雨云自动签到 (GitHub Action 版)
 
-自动签到脚本for雨云 ，提供shell文件/Github Action两种方式，提供带Telegram通知/不带Telegram通知的两个版本。  
+[![每日签到](https://github.com/${{ github.repository }}/actions/workflows/signin.yml/badge.svg)](https://github.com/${{ github.repository }}/actions/workflows/signin.yml)
 
-并且增加了一个一键完成积分任务的功能。后期会完善成一个使用Github调用雨云api实现很多功能的项目。  
+本项目通过 GitHub Action 实现雨云每日自动签到。针对雨云更新后需要人机认证的问题，脚本已适配通用验证码服务。
 
+## 特性
 
-## 运行Shell文件自动签到（不推荐，好久没更新了）
+-   **零成本**: 完全基于免费的 GitHub Action 运行。
+-   **安全**: 使用账户密码登录，不依赖可能泄露个人信息的 API Key。所有敏感信息均存储在 GitHub Secrets 中。
+-   **灵活**: 支持通过环境变量自定义验证码识别服务。
+-   **自动化**: 设置后每日自动执行，无需人工干预。
 
-```shell
-curl -s https://raw.githubusercontent.com/IcyBlue17/Rainyun_AutoSignIn/main/AutoSignin.sh | sh
-```
-## 使用Github Action自动签到（推荐）  
-1. Fork此仓库
-2. 在你自己fork的仓库的Settings - Secrets and variables - Actions - Repository secrets中创建一个名为RAINYUN_API_KEY的Repository secret，值为你获取的雨云apikey。
-3. 为这个仓库启用Github Actions。然后运行一次测试。如果返回"未达成条件"，或者"任务成功"为正确配置。此后这个workflow将定时执行。如果返回需要登录，请检查你的api密钥是否填写在了正确的位置，你是否正确填写apikey。 
-4. （可选）在Repository secret中新建两个Secret，分别名为TELEGRAM_CHAT_ID和TELEGRAM_BOT_TOKEN。填入你的tgchatid和对应通知机器人的token，保存。运行action时选取带tg通知版本的运行就可以收到通知了。
-至于为什么我要分开两个文件 后面会合并的（当我抽风了).
-注意⚠️ 你需要先給你創建的bot隨便發點消息機器人才能對你進行消息推送。
+## 如何使用
 
+### 1. Fork 本仓库
 
+点击本页面右上角的 **Fork** 按钮，将此项目复制到你自己的 GitHub 账户下。
 
-## 使用Github Action一键完成积分任务  
+### 2. 配置 Secrets
 
-同上，运行action时选取"一键完成任务"的action并手动触发一次即可    
+在你 Fork 的仓库中，进入 `Settings` -> `Secrets and variables` -> `Actions`，点击 `New repository secret` 添加以下密钥：
 
-## 关于为什么我要写这个项目（个人观点）  
-1.雨云的APIKEY可以直接获取到实名信息，不是太放心使用非自部署的服务  
-2.Github Action足够稳定而且零成本。  
+#### 必填项
 
+本项目不再提供默认验证码服务，您必须配置自己的验证码识别服务。
 
+| Secret 名          | 描述                                                       | 示例                               |
+| ------------------ | ---------------------------------------------------------- | ---------------------------------- |
+| `YYQD`             | 雨云的**账户**和**密码**，用 `&` 分隔。多账户用 `#` 分隔。 | `your_email&your_password`         |
+| `CAPTCHA_URL`      | 验证码识别接口的 URL。                                     | `https://api.example.com/solve`    |
+| `CAPTCHA_METHOD`   | 请求验证码接口使用的方法，`GET` 或 `POST`。                | `POST`                             |
+| `CAPTCHA_DATA`     | 发送到验证码接口的 JSON 数据。                             | `'{"key": "YOUR_API_KEY"}'`         |
 
+> **注意**: `CAPTCHA_DATA` 必须是**单引号**包裹的合法 JSON 字符串，以便于在 GitHub Actions 工作流中正确解析。
 
+### 3. 启用并运行 Action
 
-# 许可  
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FIcyBlue17%2FRainyun_AutoSignIn?ref=badge_large&issueType=license)
-
-  
-## 待办  
-- 一键配置时间
-  
-- 随机时间
-  
-- 一键卸载
-  
-# 注意:因本人问题目前这个脚本不带卸载功能，如果你需要卸载请手动删除计划任务和计划脚本。我将很快更新。😭   
-# 202409 更新：放弃对脚本的维护，只維護action版
-
-
+1.  进入你仓库的 **Actions** 标签页，如果有提示，请点击按钮启用 GitHub Actions。
+2.  在左侧列表中找到 **Rainyun Auto Signin** 工作流。
+3.  点击 **Run workflow**，然后再次点击绿色的 **Run workflow** 按钮即可手动触发一次签到任务。
+4.  之后，工作流将根据预设的 `cron` 计划（默认为每天早上 6:00 北京时间）自动运行。
